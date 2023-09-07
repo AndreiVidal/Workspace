@@ -1,38 +1,31 @@
-import random
+from random import choice
+from contants import CATEGORIES
+from contants import SELECTED_CATEGORIES
 
 
-PATH_ANIMAL = "static/animal.txt"
-PATH_FRUIT = "static/fruits.txt"
-PATH_RANDOM = "static/word_random.txt"
+def show_choice_menu():
+    chosen_category = ""
+    while not chosen_category:
+        for k, v in CATEGORIES.items():
+            print(f"{k} - {v}")
+        chosen_category = input("escolha: ")
+        if chosen_category not in CATEGORIES.keys():
+            print("escolha errada:")
+            chosen_category = ""
 
-categories = {
-    "1":"ANIMAIS",
-    "2":"FRUTAS",
-    "3":"ALEATÓRIAS",
-}
-selected_category = {
-    "1":PATH_ANIMAL,
-    "2":PATH_FRUIT,
-    "3":PATH_RANDOM,
-}
-
-chosen_category = ""
-while not chosen_category:
-    for k, v in categories.items():
-        print(f'{k} - {v}')
-    chosen_category = input('escolha: ')
-    if chosen_category not in categories.keys():
-        print('escolha errada:')
-        chosen_category = ""
-    
-
-    print(categories[chosen_category])
+    return chosen_category
 
 
-with open(selected_category[chosen_category], mode='r') as selected_c:
-    words = []
-    for word in selected_c.readlines():
-        words.append(word.strip())
+def random_word_category(chosen_category):
+    with open(SELECTED_CATEGORIES[chosen_category], mode="r") as selected_c:
+        words = []
+        for word in selected_c.readlines():
+            words.append(word.strip())
+    selected_word = choice(words)
+    print(selected_word)
+    return selected_word
 
 
-print(random.choice(words))
+if __name__ == "__main__":
+    x = show_choice_menu()
+    random_word_category(x)
