@@ -1,6 +1,6 @@
 from random import choice
-from contants import CATEGORIES
-from contants import SELECTED_CATEGORIES
+from constants import CATEGORIES
+from constants import SELECTED_CATEGORIES
 
 
 def show_choice_menu():
