@@ -3,6 +3,14 @@ import sys
 from random import choice
 import unicodedata
 from category import Category
+from rich.console import Console
+from rich.table import Table
+from rich import box
+from rich.prompt import Prompt
+from rich.panel import Panel
+
+
+console = Console()
 
 
 class Hangman:
@@ -48,7 +56,15 @@ class Hangman:
     def tries(self, value: int) -> None:
         self._tries = value
         if self._tries <= 0:
-            print("\n\n### GAMEOVER ###\n\n")
+            console.print(
+                Panel(
+                    f"[white b]A palavra era {self.word}[/] ",
+                    title="GAMEOVER",
+                    highlight=True,
+                    style="red",
+                ),
+                justify="center",
+            )
             retry = input("Deseja tentar novamente [s/n]").lower().strip()
             if retry == "s":
                 self.reset()
@@ -56,27 +72,37 @@ class Hangman:
                 sys.exit()
 
     def show_choice_menu(self):
-        print("CATEGORIAS DISPONÍVEIS:")
+        console.rule("CATEGORIAS DISPONÍVEIS")
+        table = Table(
+            title_style="magenta",
+            box=box.HEAVY,
+            title_justify="center",
+            expand=True,
+            highlight=True,
+        )
+        table.add_column("Opção", justify="center")
+        table.add_column("Categoria", justify="center")
         for idx, item in enumerate(self.categories):
-            print(idx + 1, item)
+            table.add_row(str(idx + 1), str(item))
+        console.print(table)
 
     def choose_category(self):
         while not self.category:
-            len_categories = len(self.categories)
             try:
-                response: str = input(f"Escolha uma categoria [1-{len_categories}]: ")
-
-                if not response.isnumeric():
-                    print("DIGITE UM NÚMERO VÁLIDO")
-                    continue
+                response = Prompt.ask(
+                    "[black on white]Escolha uma categoria[/]",
+                    choices=["1", "2", "3"],
+                    show_choices=True,
+                )
 
                 index_categories = int(response) - 1
 
-                if index_categories < 0 or index_categories > len_categories - 1:
-                    continue
-
                 self.category = self.categories[index_categories]
-                print("CATEGORIA ESCOLHIDA:", self.category)
+                console.rule(
+                    f"CATEGORIA ESCOLHIDA: {self.category} ".upper(),
+                    style="red",
+                    characters="=",
+                )
             except Exception as error:
                 print(f"EXCEPTION {error}")
 
@@ -103,23 +129,22 @@ class Hangman:
         current_state = ["_" if letter != "-" else "-" for letter in self.word]
         normalized_word = self.normalize(self.word)
 
+        guessed_letter = []
+
         def validate_guess(guess):
-            if len(guess) != 1:
-                print(
-                    f"Erro: numero de letras ==>{len(guess)}<== digite apenas 1 por vez "
-                )
+            if guess in guessed_letter:
+                print(f"Erro: ==>{guess}<== Você já digitou essa letra")
                 return False
-            elif not guess.isalpha():
-                print(f"Erro: ==>{guess}<== Digite apenas letra")
-                return False
+            guessed_letter.append(guess)
             return True
 
         def found_guess_in_word(guess):
             for index, normalized_letter in enumerate(normalized_word):
-                if guess in normalized_letter:
+                found = False
+                if guess == normalized_letter:
                     current_state[index] = guess
-                    return True
-            return False
+                    found = True
+            return found
 
         while "_" in current_state and self.tries != 0:
             print(f"Você possui {self.tries} chances para acertar!!")
