@@ -3,20 +3,15 @@ import sys
 from random import choice
 import unicodedata
 from category import Category
-from rich.console import Console
-from rich.table import Table
-from rich import box
-from rich.prompt import Prompt
-from rich.panel import Panel
-
-
-console = Console()
+from message import Message
 
 
 class Hangman:
     def __init__(self) -> None:
         self.categories_path = "./categories"
         self.categories_filepaths = self.get_categories_filepaths()
+
+        self.message = Message()
 
         self.categories = []
         self._category = None
@@ -56,53 +51,25 @@ class Hangman:
     def tries(self, value: int) -> None:
         self._tries = value
         if self._tries <= 0:
-            console.print(
-                Panel(
-                    f"[white b]A palavra era {self.word}[/] ",
-                    title="GAMEOVER",
-                    highlight=True,
-                    style="red",
-                ),
-                justify="center",
-            )
-            retry = input("Deseja tentar novamente [s/n]").lower().strip()
-            if retry == "s":
-                self.reset()
-            else:
-                sys.exit()
+            self.message.gameover(self.word)
+            self.ask_to_continue()
+
+    def ask_to_continue(self):
+        if self.message.retry_ask():
+            self.reset()
+        else:
+            sys.exit()
 
     def show_choice_menu(self):
-        console.rule("CATEGORIAS DISPONÍVEIS")
-        table = Table(
-            title_style="magenta",
-            box=box.HEAVY,
-            title_justify="center",
-            expand=True,
-            highlight=True,
-        )
-        table.add_column("Opção", justify="center")
-        table.add_column("Categoria", justify="center")
-        for idx, item in enumerate(self.categories):
-            table.add_row(str(idx + 1), str(item))
-        console.print(table)
+        self.message.choice_menu(self.categories)
 
     def choose_category(self):
         while not self.category:
             try:
-                response = Prompt.ask(
-                    "[black on white]Escolha uma categoria[/]",
-                    choices=["1", "2", "3"],
-                    show_choices=True,
-                )
-
+                response = self.message.choose_category()
                 index_categories = int(response) - 1
-
                 self.category = self.categories[index_categories]
-                console.rule(
-                    f"CATEGORIA ESCOLHIDA: {self.category} ".upper(),
-                    style="red",
-                    characters="=",
-                )
+                self.message.choosed_category(self.category)
             except Exception as error:
                 print(f"EXCEPTION {error}")
 
@@ -159,7 +126,8 @@ class Hangman:
             if not found_guess_in_word(guess):
                 self.tries -= 1
 
-        print(self.word)
+        self.message.won(self.word)
+        self.ask_to_continue()
 
     def start(self):
         self.show_choice_menu()
