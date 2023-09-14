@@ -2,40 +2,27 @@ from rich.console import Console
 from rich.table import Table
 from rich import box
 from rich.prompt import Prompt
-from rich.panel import Panel
+
+from style import panel
 
 
 class Message:
     def __init__(self):
         self.console = Console()
 
-    def _panel(self, msg, title, style="blue"):
-        return Panel(
-            f"[white b]{msg}[/] ",
-            title=title,
-            highlight=True,
-            style=style,
-        )
-
+    @panel
     def gameover(self, word: str):
-        self.console.print(
-            self._panel(
-                f"A palavra era {word}",
-                "GAMEOVER",
-                "red",
-            ),
-            justify="center",
-        )
+        msg = f"A palavra era {word}"
+        title = "GAMEOVER"
+        style = "red"
+        return msg, title, style
 
+    @panel
     def won(self, word: str):
-        self.console.print(
-            self._panel(
-                f"Parabéns! A palavra é {word}",
-                "YOU WIN",
-                "blue",
-            ),
-            justify="center",
-        )
+        msg = f"Parabéns! A palavra é {word}"
+        title = "Você venceu"
+        style = "blue"
+        return msg, title, style
 
     def retry_ask(self):
         r = ""
