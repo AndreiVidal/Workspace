@@ -50,8 +50,7 @@ def prompt_ask(func):
         response_chosen = (
             prompt.ask("Deseja tentar novamente", choices=["s", "n"]).lower().strip()
         )
-        return response_chosen
-        # if response_chosen == "n":
-        #     return False
+        if response_chosen == "n":
+            return False
 
     return wrapper
