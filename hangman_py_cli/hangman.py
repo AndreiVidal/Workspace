@@ -102,8 +102,15 @@ class Hangman:
             if guess in guessed_letter:
                 print(f"Erro: ==>{guess}<== Você já digitou essa letra")
                 return False
+            elif guess.isdigit() or not guess.isalpha():
+                print("somente letras ")
+                return False
             guessed_letter.append(guess)
-            return True
+            if len(guess) == 1:
+                return True
+            else:
+                print("somente uma letra")
+                return False
 
         def found_guess_in_word(guess):
             for index, normalized_letter in enumerate(normalized_word):
@@ -116,7 +123,6 @@ class Hangman:
         while "_" in current_state and self.tries != 0:
             print(f"Você possui {self.tries} chances para acertar!!")
             print(*current_state)
-            print()
 
             guess = input("Digite uma letra: ").lower()
 
