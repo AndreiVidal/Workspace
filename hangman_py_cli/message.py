@@ -3,7 +3,6 @@ from rich.prompt import Prompt
 
 from style import panel
 from style import table
-from style import prompt_ask
 
 
 class Message:
@@ -24,10 +23,14 @@ class Message:
         style = "blue"
         return msg, title, style
 
-    @prompt_ask
-    def retry_ask(self, response_chosen):
-        if response_chosen == "s":
-            return True
+    def retry_ask(self):
+        prompt = Prompt
+        response_chosen = (
+            prompt.ask("Deseja tentar novamente", choices=["s", "n"]).lower().strip()
+        )
+        if response_chosen == "n":
+            return False
+        return response_chosen
 
     @table
     def choice_menu(self, categories):

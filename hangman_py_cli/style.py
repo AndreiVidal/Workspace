@@ -42,15 +42,3 @@ def table(func):
         console.print(table)
 
     return wrapper
-
-
-def prompt_ask(func):
-    def wrapper(*args, **kwargs):
-        prompt = Prompt()
-        response_chosen = (
-            prompt.ask("Deseja tentar novamente", choices=["s", "n"]).lower().strip()
-        )
-        if response_chosen == "n":
-            return False
-
-    return wrapper
