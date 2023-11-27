@@ -10,7 +10,7 @@ do primeiro número elevado ao segundo.
 
 int main()
 {
-    setlocale(LC_ALL,"UTF-8");
+    setlocale(LC_ALL,"");
     int number1, number2, total;
 
     printf("Calcular potência entre dois numeros\n");
