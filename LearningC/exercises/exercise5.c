@@ -7,9 +7,9 @@ eleitoral: não eleitor (menor que 16 anos de idade), eleitor obrigatório (entr
 #include <stdio.h>
 #include <locale.h>
 
-void main()
+int main()
 {
-    setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "Portugese");
     int idade;
 
     printf("Digite sua idade: ");
@@ -26,4 +26,6 @@ void main()
     {
         printf("Seu voto é obrigatório.\n");
     }
+
+    return 0;
 }
