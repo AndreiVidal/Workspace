@@ -5,19 +5,20 @@ possuírem valores negativos
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#define SIZE 10
 
 int	main()
 {
-    int size = 10;
-    int vector[size];
-    for (int i = 0; i < size; i++)
+
+    int vector[SIZE];
+    for (int i = 0; i < SIZE; i++)
     {
         printf("%dº número: ",(i + 1));
         while(scanf("%d", &vector[i]) != 1) //Making Sure It's an Integer
         {
             printf("Entrada inválida. Por favor, insira um número inteiro: ");
-            fflush(stdin);//Clear Buffer
+            int c;
+            while ((c = getchar()) != '\n' && c != -1 );
         }
 
         if (vector[i] < 0)
@@ -28,7 +29,7 @@ int	main()
         
     }
     printf("\tNúmeros digitados\n");
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < SIZE; i++)
     {
         printf("%dº: %d\n",(i + 1),vector[i]);
         

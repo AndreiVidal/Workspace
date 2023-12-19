@@ -5,19 +5,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define SIZE  10
 
 int	main()
 {
-    int size = 10;
-    int vector[size];
+    int vector[SIZE];
     int evenCount = 0;
 
     printf("\tContador de números pares:\n");
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < SIZE; i++)
     {
         printf("\tDigite o %dº valor: ",(i+1));
-        scanf("%d",&vector[i]);
-        
+        while(scanf("%d", &vector[i]) != 1) //Making Sure It's an Integer
+        {
+            printf("Entrada inválida. Por favor, insira um números: ");
+            int c;
+            while ((c = getchar()) != '\n' && c != -1 );
+        }
         if (vector[i] % 2 == 0)
             {
                 evenCount ++;
@@ -27,6 +31,6 @@ int	main()
 
     printf("\tQuantidade de números pares: %d\n",evenCount);
 
-    system("pause");
+    getchar();
     return 0;
 }
